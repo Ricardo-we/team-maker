@@ -8,6 +8,7 @@
 #include <Windows.h>
 
 const int maxGroupSize = 7;
+const int MINIMUM_STUDENTS = 5;
 
 struct Student
 {
@@ -36,14 +37,30 @@ std::string getStringInput(std::string label)
     return name;
 }
 
+template <typename T>
+int lastIndexOf(std::vector<T> arr)
+{
+    int lastIndex = 0;
+    if (arr.size() > 0)
+        lastIndex = arr.size() - 1;
+    return lastIndex;
+}
+
 bool compareStudents(Student student1, Student student2)
 {
-    return student1.club == student2.club ||
-           student1.dancing == student2.dancing ||
-           student1.hobbie == student2.hobbie ||
-           student1.instrument == student2.instrument ||
-           student1.music == student2.music ||
-           student1.sport == student2.sport;
+    int equalQualities = 0;
+    if (student1.club == student2.club)
+        equalQualities++;
+    if (student1.dancing == student2.dancing)
+        equalQualities++;
+    if (student1.hobbie == student2.hobbie)
+        equalQualities++;
+    if (student1.instrument == student2.instrument)
+        equalQualities++;
+    if (student1.sport == student2.sport)
+        equalQualities++;
+
+    return equalQualities >= 2;
 }
 
 // Función para generar equipos de trabajo
@@ -53,6 +70,20 @@ std::vector<std::vector<Student>> generateTeams(std::vector<Student> originalStu
     std::vector<Student> pendingStudents = {};
     std::vector<std::vector<Student>> groups = originalGroups;
     std::vector<int> removeFromStudentsListIndexes = {};
+
+    if (students.size() <= MINIMUM_STUDENTS && students.size() > 2)
+    {
+        groups.push_back(students);
+        return groups;
+    }
+    else if (students.size() == 1)
+    {
+        if (groups.empty())
+            groups.push_back(std::vector<Student>{});
+        int lastIndex = lastIndexOf(groups);
+        groups[lastIndex].push_back(students[0]);
+        return groups;
+    }
 
     Student student = students[0];
     // students.pop_back();
@@ -65,9 +96,7 @@ std::vector<std::vector<Student>> generateTeams(std::vector<Student> originalStu
     {
         if (compareStudents(student, students[i]))
         {
-            int lastIndex = groups.size() - 1;
-            if (lastIndex < 0)
-                lastIndex = 0;
+            int lastIndex = lastIndexOf(groups);
             if (groups.empty())
                 groups.push_back(std::vector<Student>{});
             if (groups[lastIndex].empty())
@@ -75,8 +104,8 @@ std::vector<std::vector<Student>> generateTeams(std::vector<Student> originalStu
             if (groups.at(lastIndex).size() >= maxGroupSize)
             {
                 groups.push_back(std::vector<Student>{});
-                lastIndex = groups.size() - 1;
                 break;
+                // lastIndex = lastIndexOf(groups);
             }
 
             removeFromStudentsListIndexes.push_back(i);
@@ -89,8 +118,9 @@ std::vector<std::vector<Student>> generateTeams(std::vector<Student> originalStu
         bool hasEqual = false;
         for (int j = 0; j < removeFromStudentsListIndexes.size(); j++)
         {
-            if (i == j)
-                hasEqual = true;
+            hasEqual = i == removeFromStudentsListIndexes[j];
+            if (hasEqual)
+                break;
         }
 
         if (!hasEqual)
@@ -104,8 +134,6 @@ std::vector<std::vector<Student>> generateTeams(std::vector<Student> originalStu
 
     return groups;
 }
-
-
 
 Student getStudent()
 {
@@ -127,29 +155,30 @@ int main()
 
     // Población de personas a escoger
     std::vector<Student> studentsSample = {
-        {"John", "Football", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
-        {"Sarah", "Basketball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
-        {"Michael", "Tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"},
-        {"Emily", "Swimming", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
-        {"David", "Football", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
-        {"Jessica", "Basketball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
-        {"Daniel", "Tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"},
-        {"Sophia", "Swimming", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
-        {"Matthew", "Football", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
-        {"Olivia", "Basketball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
-        {"Jacob", "Tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"},
-        {"Isabella", "Swimming", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
-        {"William", "Football", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
-        {"Ava", "Basketball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},};
+        {"John", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
+        {"Sarah", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
+        {"Michael", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"},
+        {"Emily", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
+        {"David", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
+        {"Jessica", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
+        {"Daniel", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"},
+        {"Sophia", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
+        {"Matthew", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
+        {"Olivia", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
+        {"Jacob", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"},
+        {"Isabella", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
+        {"William", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
+        {"Ava", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
+    };
 
-    while (true)
-    {
-        Student student = getStudent();
-        studentsSample.push_back(student);
-        std::string wantToAddMoreStudents = getStringInput("Desea añadir otro estudiante? (sí o no)");
-        if (toLowerCase(wantToAddMoreStudents) == "no")
-            break;
-    }
+    // while (true)
+    // {
+    //     Student student = getStudent();
+    //     studentsSample.push_back(student);
+    //     std::string wantToAddMoreStudents = getStringInput("Desea añadir otro estudiante? (sí o no)");
+    //     if (toLowerCase(wantToAddMoreStudents) == "no")
+    //         break;
+    // }
 
     // Generar equipos de trabajo
     std::vector<std::vector<Student>> teams = generateTeams(studentsSample, std::vector<std::vector<Student>>{});
@@ -157,7 +186,8 @@ int main()
     // Mostrar los equipos generados
     for (int i = 0; i < teams.size(); i++)
     {
-        std::cout << "Equipo " << i + 1 << ":" << std::endl;
+        std::string totalElementsInTeam = "(" + std::to_string(teams[i].size()) + ")";
+        std::cout << "Equipo " << i + 1 << totalElementsInTeam << ":" << std::endl;
 
         for (const auto &persona : teams[i])
         {
