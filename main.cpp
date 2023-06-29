@@ -112,6 +112,7 @@ int main()
     SetConsoleOutputCP(CP_UTF8);
 
     // Población de personas a escoger
+    // TODO Dejar vacío si es necesario
     std::vector<Student> studentsSample = {
         {1, "John", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
         {2, "Sarah", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
@@ -129,14 +130,14 @@ int main()
         {14, "Ava", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
     };
 
-    // while (true)
-    // {
-    //     Student student = getStudent();
-    //     studentsSample.push_back(student);
-    //     std::string wantToAddMoreStudents = getStringInput("Desea añadir otro estudiante? (sí o no)");
-    //     if (toLowerCase(wantToAddMoreStudents) == "no")
-    //         break;
-    // }
+    while (true)
+    {
+        Student student = getStudent();
+        studentsSample.push_back(student);
+        std::string wantToAddMoreStudents = getStringInput("Desea añadir otro estudiante? (sí o no)");
+        if (toLowerCase(wantToAddMoreStudents) == "no")
+            break;
+    }
 
     // Generar equipos de trabajo
     // std::vector<std::vector<Student>> teams = generateTeams(studentsSample, std::vector<std::vector<Student>>{});
