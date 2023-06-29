@@ -12,6 +12,7 @@ const int MINIMUM_STUDENTS = 5;
 
 struct Student
 {
+    int id;
     std::string name;
     std::string sport;
     std::string music;
@@ -63,73 +64,90 @@ bool compareStudents(Student student1, Student student2)
     return equalQualities >= 2;
 }
 
-// Función para generar equipos de trabajo
-std::vector<std::vector<Student>> generateTeams(std::vector<Student> originalStudents, std::vector<std::vector<Student>> originalGroups)
-{
-    std::vector<Student> students = originalStudents;
-    std::vector<Student> pendingStudents = {};
-    std::vector<std::vector<Student>> groups = originalGroups;
-    std::vector<int> removeFromStudentsListIndexes = {};
+// // Función para generar equipos de trabajo
+// std::vector<std::vector<Student>> generateTeams(std::vector<Student> originalStudents, std::vector<std::vector<Student>> originalGroups)
+// {
+//     std::vector<Student> students = originalStudents;
+//     std::vector<Student> pendingStudents = {};
+//     std::vector<std::vector<Student>> groups = originalGroups;
 
-    if (students.size() <= MINIMUM_STUDENTS && students.size() > 2)
-    {
-        groups.push_back(students);
-        return groups;
-    }
-    else if (students.size() == 1)
-    {
-        if (groups.empty())
-            groups.push_back(std::vector<Student>{});
-        int lastIndex = lastIndexOf(groups);
-        groups[lastIndex].push_back(students[0]);
-        return groups;
-    }
+//     if (students.size() <= MINIMUM_STUDENTS && students.size() > 2)
+//     {
+//         groups.push_back(students);
+//         return groups;
+//     }
+//     else if (students.size() == 1)
+//     {
+//         if (groups.empty())
+//             groups.push_back(std::vector<Student>{});
+//         int lastIndex = lastIndexOf(groups);
+//         groups[lastIndex].push_back(students[0]);
+//         return groups;
+//     }
 
-    Student student = students[0];
-    // students.pop_back();
-    students.erase(students.begin());
+//     Student student = students[0];
+//     students.erase(students.begin());
+//     // notPendingStudentsIds.push_back(student.id);
 
-    // if (students.empty())
-    //     return groups;
+//     for (int i = 0; i < students.size(); i++)
+//     {
+//         if (compareStudents(student, students[i]))
+//         {
+//             int lastIndex = lastIndexOf(groups);
+//             if (groups.empty())
+//                 groups.push_back(std::vector<Student>{});
+//             if (groups[lastIndex].empty())
+//                 groups[lastIndex].push_back(student);
+//             if (groups.at(lastIndex).size() >= maxGroupSize)
+//             {
+//                 groups.push_back(std::vector<Student>{});
+//                 break;
+//             }
 
-    for (int i = 0; i < students.size(); i++)
-    {
-        if (compareStudents(student, students[i]))
-        {
-            int lastIndex = lastIndexOf(groups);
-            if (groups.empty())
-                groups.push_back(std::vector<Student>{});
-            if (groups[lastIndex].empty())
-                groups[lastIndex].push_back(student);
-            if (groups.at(lastIndex).size() >= maxGroupSize)
-            {
-                groups.push_back(std::vector<Student>{});
-                break;
-                // lastIndex = lastIndexOf(groups);
+//             // notPendingStudentsIds.push_back(students[i].id);
+//             groups[lastIndex].push_back(students[i]);
+//             students.erase(students.begin() + i);
+//         }
+//     }
+
+//     // std::cout << groups.size() << std::endl;
+//     // for (Student stud : students)
+//     // {
+//     //     std::cout << stud.id << " " << stud.name << std::endl;
+//     // }
+
+//     if (students.size() > 0)
+//     {
+//         return generateTeams(students, groups);
+//     }
+
+//     return groups;
+// }
+
+std::vector<std::vector<Student>> generateTeams(std::vector<Student> students, int minGroupSize, int maxGroupSize) {
+    std::vector<std::vector<Student>> groups;
+
+    // Reordenar aleatoriamente los estudiantes
+    std::random_device rd;
+    std::mt19937 generator(rd());
+    std::shuffle(students.begin(), students.end(), generator);
+
+    while (!students.empty()) {
+        std::vector<Student> currentGroup;
+        currentGroup.push_back(students.back()); // Agregar el último estudiante a un nuevo grupo
+        students.pop_back(); // Eliminar el último estudiante del vector principal
+
+        for (int i = students.size() - 1; i >= 0; i--) {
+            if (compareStudents(currentGroup.front(), students[i])) {
+                currentGroup.push_back(students[i]); // Agregar al estudiante al grupo
+                students.erase(students.begin() + i); // Eliminar al estudiante del vector principal
+                
+                if (currentGroup.size() == maxGroupSize) // Si el grupo alcanza el tamaño máximo, terminar de agregar estudiantes
+                    break;
             }
-
-            removeFromStudentsListIndexes.push_back(i);
-            groups[lastIndex].push_back(students[i]);
-        }
-    }
-
-    for (int i = 0; i < students.size(); i++)
-    {
-        bool hasEqual = false;
-        for (int j = 0; j < removeFromStudentsListIndexes.size(); j++)
-        {
-            hasEqual = i == removeFromStudentsListIndexes[j];
-            if (hasEqual)
-                break;
         }
 
-        if (!hasEqual)
-            pendingStudents.push_back(students[i]);
-    }
-
-    if (pendingStudents.size() > 0)
-    {
-        return generateTeams(pendingStudents, groups);
+        groups.push_back(currentGroup); // Agregar el grupo completo a la lista de grupos
     }
 
     return groups;
@@ -155,20 +173,20 @@ int main()
 
     // Población de personas a escoger
     std::vector<Student> studentsSample = {
-        {"John", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
-        {"Sarah", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
-        {"Michael", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"},
-        {"Emily", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
-        {"David", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
-        {"Jessica", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
-        {"Daniel", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"},
-        {"Sophia", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
-        {"Matthew", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
-        {"Olivia", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
-        {"Jacob", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"},
-        {"Isabella", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
-        {"William", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
-        {"Ava", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
+        {1, "John", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
+        {2, "Sarah", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
+        {3, "Michael", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"},
+        {4, "Emily", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
+        {5, "David", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
+        {6, "Jessica", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
+        {7, "Daniel", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"},
+        {8, "Sophia", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
+        {9, "Matthew", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
+        {10, "Olivia", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
+        {11, "Jacob", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"},
+        {12, "Isabella", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
+        {13, "William", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
+        {14, "Ava", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
     };
 
     // while (true)
@@ -181,17 +199,17 @@ int main()
     // }
 
     // Generar equipos de trabajo
-    std::vector<std::vector<Student>> teams = generateTeams(studentsSample, std::vector<std::vector<Student>>{});
-
+    // std::vector<std::vector<Student>> teams = generateTeams(studentsSample, std::vector<std::vector<Student>>{});
+    std::vector<std::vector<Student>> teams = generateTeams(studentsSample,MINIMUM_STUDENTS, maxGroupSize);
     // Mostrar los equipos generados
     for (int i = 0; i < teams.size(); i++)
     {
         std::string totalElementsInTeam = "(" + std::to_string(teams[i].size()) + ")";
         std::cout << "Equipo " << i + 1 << totalElementsInTeam << ":" << std::endl;
 
-        for (const auto &persona : teams[i])
+        for (Student student : teams[i])
         {
-            std::cout << "Nombre: " << persona.name << std::endl;
+            std::cout << "id: " << student.id << " Nombre: " << student.name << std::endl;
         }
 
         std::cout << std::endl;
