@@ -64,66 +64,6 @@ bool compareStudents(Student student1, Student student2)
     return equalQualities >= 2;
 }
 
-// // Función para generar equipos de trabajo
-// std::vector<std::vector<Student>> generateTeams(std::vector<Student> originalStudents, std::vector<std::vector<Student>> originalGroups)
-// {
-//     std::vector<Student> students = originalStudents;
-//     std::vector<Student> pendingStudents = {};
-//     std::vector<std::vector<Student>> groups = originalGroups;
-
-//     if (students.size() <= MINIMUM_STUDENTS && students.size() > 2)
-//     {
-//         groups.push_back(students);
-//         return groups;
-//     }
-//     else if (students.size() == 1)
-//     {
-//         if (groups.empty())
-//             groups.push_back(std::vector<Student>{});
-//         int lastIndex = lastIndexOf(groups);
-//         groups[lastIndex].push_back(students[0]);
-//         return groups;
-//     }
-
-//     Student student = students[0];
-//     students.erase(students.begin());
-//     // notPendingStudentsIds.push_back(student.id);
-
-//     for (int i = 0; i < students.size(); i++)
-//     {
-//         if (compareStudents(student, students[i]))
-//         {
-//             int lastIndex = lastIndexOf(groups);
-//             if (groups.empty())
-//                 groups.push_back(std::vector<Student>{});
-//             if (groups[lastIndex].empty())
-//                 groups[lastIndex].push_back(student);
-//             if (groups.at(lastIndex).size() >= maxGroupSize)
-//             {
-//                 groups.push_back(std::vector<Student>{});
-//                 break;
-//             }
-
-//             // notPendingStudentsIds.push_back(students[i].id);
-//             groups[lastIndex].push_back(students[i]);
-//             students.erase(students.begin() + i);
-//         }
-//     }
-
-//     // std::cout << groups.size() << std::endl;
-//     // for (Student stud : students)
-//     // {
-//     //     std::cout << stud.id << " " << stud.name << std::endl;
-//     // }
-
-//     if (students.size() > 0)
-//     {
-//         return generateTeams(students, groups);
-//     }
-
-//     return groups;
-// }
-
 std::vector<std::vector<Student>> generateTeams(std::vector<Student> students, int minGroupSize, int maxGroupSize) {
     std::vector<std::vector<Student>> groups;
 
