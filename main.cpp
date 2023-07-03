@@ -30,8 +30,25 @@ std::string toLowerCase(std::string word)
     return result;
 }
 
+template <typename T>
+std::vector<T> slice(std::vector<T> vec, int begin, int end)
+{
+    std::vector<T> result = {};
+
+    if (begin > vec.size() || end > vec.size() || begin < 0)
+        return result;
+
+    for (int i = begin; i <= end; i++)
+    {
+        result.push_back(vec[i]);
+    }
+
+    return result;
+}
+
 std::string getStringInput(std::string label)
 {
+    fflush(stdin);
     std::cout << label << std::endl;
     std::string name;
     std::cin >> name;
@@ -64,42 +81,72 @@ bool compareStudents(Student student1, Student student2)
     return equalQualities >= 2;
 }
 
-std::vector<std::vector<Student>> generateTeams(std::vector<Student> students, int minGroupSize, int maxGroupSize) {
+std::vector<std::vector<Student>> generateTeams(std::vector<Student> students, int minGroupSize, int maxGroupSize)
+{
     std::vector<std::vector<Student>> groups;
-
+    int counter = 0;
     // Reordenar aleatoriamente los estudiantes
     std::random_device rd;
     std::mt19937 generator(rd());
     std::shuffle(students.begin(), students.end(), generator);
 
-    while (students.size() > MINIMUM_STUDENTS) {
+    while (students.size() > MINIMUM_STUDENTS && counter < 5)
+    {
         std::vector<Student> currentGroup;
-        
         currentGroup.push_back(students.back()); // Agregar el último estudiante a un nuevo grupo
-        students.pop_back(); // Eliminar el último estudiante del vector principal
+        students.pop_back();                     // Eliminar el último estudiante del vector principal
 
-        for (int i = students.size() - 1; i >= 0; i--) {
-            if (compareStudents(currentGroup.front(), students[i])) {
-                currentGroup.push_back(students[i]); // Agregar al estudiante al grupo
+        for (int i = students.size() - 1; i >= 0; i--)
+        {
+            bool currentStudentIsCompatible = compareStudents(currentGroup.back(), students[i]);
+
+            // for (Student groupedStudent : currentGroup)
+            // {
+            //     currentStudentIsCompatible = compareStudents(groupedStudent, students[i]);
+            //     if (!currentStudentIsCompatible){
+            //         break;
+            //     }
+            // }
+
+            if (currentStudentIsCompatible)
+            {
+                currentGroup.push_back(students[i]);  // Agregar al estudiante al grupo
                 students.erase(students.begin() + i); // Eliminar al estudiante del vector principal
-                
-                if (currentGroup.size() == maxGroupSize) // Si el grupo alcanza el tamaño máximo, terminar de agregar estudiantes
+
+                if (currentGroup.size() >= MINIMUM_STUDENTS) // Si el grupo alcanza el tamaño máximo, terminar de agregar estudiantes
                     break;
             }
+
+            std::cout << currentGroup.size() << std::endl;
         }
 
-        if(currentGroup.size() < MINIMUM_STUDENTS){
-            for(Student student : currentGroup){
+        if (currentGroup.size() < MINIMUM_STUDENTS)
+        {
+            for (Student student : currentGroup)
+            {
                 students.push_back(student);
             }
             std::shuffle(students.begin(), students.end(), generator);
-        } else {
+            counter++;
+        }
+        else
+        {
+            counter = 0;
             groups.push_back(currentGroup); // Agregar el grupo completo a la lista de grupos
         }
     }
-    
-    if(students.size() > 0 && students.size() <= MINIMUM_STUDENTS){
-        groups.push_back(students);
+
+    for (int i = 0; i < students.size(); i += MINIMUM_STUDENTS)
+    {
+        if (students.size() < MINIMUM_STUDENTS)
+        {
+            groups.push_back(students);
+            break;
+        }
+        // groups.push_back(std::vector(students.begin() + i, students.begin() + i + 7));
+        auto sliced = slice<Student>(students, i > 0 ? i + 1 : 0, (i > 0 ? i + 1 : i) + MINIMUM_STUDENTS);
+        if (sliced.size() > 0)
+            groups.push_back(sliced);
     }
 
     return groups;
@@ -140,20 +187,23 @@ int main()
         {12, "Isabella", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
         {13, "William", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
         {14, "Ava", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
+        {15, "Ave", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
+        {16, "Williama", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
+        {17, "Isabell", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
     };
 
-    while (true)
-    {
-        Student student = getStudent();
-        studentsSample.push_back(student);
-        std::string wantToAddMoreStudents = getStringInput("Desea añadir otro estudiante? (sí o no)");
-        if (toLowerCase(wantToAddMoreStudents) == "no")
-            break;
-    }
+    // while (true)
+    // {
+    //     Student student = getStudent();
+    //     studentsSample.push_back(student);
+    //     std::string wantToAddMoreStudents = getStringInput("Desea añadir otro estudiante? (sí o no)");
+    //     if (toLowerCase(wantToAddMoreStudents) == "no")
+    //         break;
+    // }
 
     // Generar equipos de trabajo
     // std::vector<std::vector<Student>> teams = generateTeams(studentsSample, std::vector<std::vector<Student>>{});
-    std::vector<std::vector<Student>> teams = generateTeams(studentsSample,MINIMUM_STUDENTS, maxGroupSize);
+    std::vector<std::vector<Student>> teams = generateTeams(studentsSample, MINIMUM_STUDENTS, maxGroupSize);
     // Mostrar los equipos generados
     for (int i = 0; i < teams.size(); i++)
     {
