@@ -72,8 +72,9 @@ std::vector<std::vector<Student>> generateTeams(std::vector<Student> students, i
     std::mt19937 generator(rd());
     std::shuffle(students.begin(), students.end(), generator);
 
-    while (!students.empty()) {
+    while (students.size() > MINIMUM_STUDENTS) {
         std::vector<Student> currentGroup;
+        
         currentGroup.push_back(students.back()); // Agregar el último estudiante a un nuevo grupo
         students.pop_back(); // Eliminar el último estudiante del vector principal
 
@@ -87,7 +88,18 @@ std::vector<std::vector<Student>> generateTeams(std::vector<Student> students, i
             }
         }
 
-        groups.push_back(currentGroup); // Agregar el grupo completo a la lista de grupos
+        if(currentGroup.size() < MINIMUM_STUDENTS){
+            for(Student student : currentGroup){
+                students.push_back(student);
+            }
+            std::shuffle(students.begin(), students.end(), generator);
+        } else {
+            groups.push_back(currentGroup); // Agregar el grupo completo a la lista de grupos
+        }
+    }
+    
+    if(students.size() > 0 && students.size() <= MINIMUM_STUDENTS){
+        groups.push_back(students);
     }
 
     return groups;
