@@ -161,7 +161,7 @@ Student getStudent(int id)
     Student student = {};
     student.id = id;
     student.name = getStringInput("Introduce tu nombre: ");
-    student.sport = getStringInput("¿Cuál es su deporte favorito? (futbol,basquet,voley,natacion,karate,otros): ");
+    student.sport = getStringInput("¿Cuál es su deporte favorito? (futbol,basquetball,tennis,natacion,karate,otros): ");
     student.music = getStringInput("¿Qué música le gusta ? (salsa,rock,bachata,regaetton,merengue,technocumbia,folklorica,otros): ");
     student.dancing = getStringInput("¿Qué danza le gusta de preferencia? (salsa,rock,bachata,regaetton,merengue,technocumbia,folklorica,otros): ");
     student.instrument = getStringInput("¿Toca algún instrumento? (guitarra,bateria,piano,saxo,no toca, otros)");
@@ -197,17 +197,7 @@ int main()
         {17, "Isabell", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
         {18, "Alexander", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"},
         {19, "Charlotte", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
-        {20, "James", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
-        {21, "Amelia", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
-        {22, "Benjamin", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"},
-        {23, "Evelyn", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
-        {24, "Daniel", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
-        {25, "Sofia", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
-        {26, "Joseph", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"},
-        // {27, "Harper", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
-        // {28, "Henry", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
-        // {29, "Ella", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
-        // {30, "Christopher", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"}
+        {20, "James", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"}
     };
 
    
