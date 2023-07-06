@@ -33,13 +33,13 @@ std::string toLowerCase(std::string word)
 template <typename T>
 std::vector<T> slice(std::vector<T> vec, int begin, int end)
 {
-    int _end = end <= vec.size() ? vec.size() : end;
+    int _end = end < vec.size() ? end : vec.size();
     std::vector<T> result = {};
 
     if (begin > vec.size() || begin < 0)
         return result;
 
-    for (int i = begin; i <= _end; i++)
+    for (int i = begin; i < _end; i++)
     {
         result.push_back(vec[i]);
     }
@@ -47,10 +47,15 @@ std::vector<T> slice(std::vector<T> vec, int begin, int end)
     return result;
 }
 
-std::string getStringInput(std::string label)
+void println(std::string label)
 {
     fflush(stdin);
     std::cout << label << std::endl;
+}
+
+std::string getStringInput(std::string label)
+{
+    println(label);
     std::string name;
     std::cin >> name;
     return name;
@@ -109,8 +114,6 @@ std::vector<std::vector<Student>> generateTeams(std::vector<Student> students, i
                 if (currentGroup.size() >= MINIMUM_STUDENTS) // Si el grupo alcanza el tamaño máximo, terminar de agregar estudiantes
                     break;
             }
-
-            std::cout << currentGroup.size() << std::endl;
         }
 
         if (currentGroup.size() < MINIMUM_STUDENTS)
@@ -129,20 +132,30 @@ std::vector<std::vector<Student>> generateTeams(std::vector<Student> students, i
         }
     }
 
-    for (int i = 0; i < students.size(); i += MINIMUM_STUDENTS)
+    int pendingGroupsSize = students.size() / MINIMUM_STUDENTS;
+    int lastGroupIndex = 0;
+    for (int i = 0; i < pendingGroupsSize; i++)
     {
-        int startIndex = i > 0 ? i + 1 : 0;
-        int endIndex = (i > 0 ? i + 1 : i) + MINIMUM_STUDENTS;
-        std::vector<Student> newGroup = slice<Student>(students, startIndex, endIndex);
-
-        // if (newGroup.size() < MINIMUM_STUDENTS)
-        // {
+        println(std::to_string(lastGroupIndex));
+        // int startIndex = lastGroupIndex > 0 ? lastGroupIndex + 1 : 0;
+        // int startIndex =  lastGroupIndex;
+        // int endIndex = (lastGroupIndex > 0 ? lastGroupIndex + 1 : lastGroupIndex) + MINIMUM_STUDENTS;
+        int startIndex = 0;
+        int endIndex = students.size() < (MINIMUM_STUDENTS + 3)  ? students.size() : MINIMUM_STUDENTS;
+        // if(students.size() <= MINIMUM_STUDENTS) {
+        //     println("JIJI" + std::to_string(startIndex) + std::to_string(students.size()));
+        //     // groups.push_back(slice(students, startIndex, students.size()));
         //     groups.push_back(students);
         //     break;
         // }
+        // int endIndex = i + MINIMUM_STUDENTS;
+        std::vector<Student> newGroup = slice<Student>(students, startIndex, endIndex);
+        students.erase(students.begin() + startIndex, students.begin() + endIndex);
+        lastGroupIndex = endIndex;
 
         if (newGroup.size() > 0)
             groups.push_back(newGroup);
+        
     }
 
     return groups;
@@ -168,7 +181,7 @@ int main()
 
     // Población de personas a escoger
     // TODO Dejar vacío si es necesario
-    std::vector<Student> studentsSample = {
+    std::vector<Student> studentsSample =  {
         {1, "John", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
         {2, "Sarah", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
         {3, "Michael", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"},
@@ -186,6 +199,19 @@ int main()
         {15, "Ave", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
         {16, "Williama", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
         {17, "Isabell", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
+        {18, "Alexander", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"},
+        {19, "Charlotte", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
+        {20, "James", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
+        {21, "Amelia", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
+        {22, "Benjamin", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"},
+        {23, "Evelyn", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
+        {24, "Daniel", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
+        {25, "Sofia", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
+        {26, "Joseph", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"},
+        {27, "Harper", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
+        {28, "Henry", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
+        {29, "Ella", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
+        {30, "Christopher", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"}
     };
 
     // while (true)
@@ -200,6 +226,7 @@ int main()
     // Generar equipos de trabajo
     // std::vector<std::vector<Student>> teams = generateTeams(studentsSample, std::vector<std::vector<Student>>{});
     std::vector<std::vector<Student>> teams = generateTeams(studentsSample, MINIMUM_STUDENTS, maxGroupSize);
+
     // Mostrar los equipos generados
     for (int i = 0; i < teams.size(); i++)
     {
