@@ -30,17 +30,18 @@ std::string toLowerCase(std::string word)
     return result;
 }
 
-template <typename T>
-std::vector<T> slice(std::vector<T> vec, int begin, int end)
+//template <typename T>
+std::vector<Student> slice(std::vector<Student> &vec, int begin, int end)
 {
-    std::vector<T> result = {};
+    std::vector<Student> result = {};
 
     if (begin > vec.size() || end > vec.size() || begin < 0)
         return result;
 
-    for (int i = begin; i <= end; i++)
+    for (int i = begin; i < end; i++)
     {
         result.push_back(vec[i]);
+        vec.erase(vec.begin() + i);
     }
 
     return result;
@@ -136,7 +137,9 @@ std::vector<std::vector<Student>> generateTeams(std::vector<Student> students, i
         }
     }
 
-    for (int i = 0; i < students.size(); i += MINIMUM_STUDENTS)
+    int remainingStudents = students.size();
+
+    for (int i = 0; i < remainingStudents; i += MINIMUM_STUDENTS)
     {
         if (students.size() < MINIMUM_STUDENTS)
         {
@@ -144,7 +147,7 @@ std::vector<std::vector<Student>> generateTeams(std::vector<Student> students, i
             break;
         }
         // groups.push_back(std::vector(students.begin() + i, students.begin() + i + 7));
-        auto sliced = slice<Student>(students, i > 0 ? i + 1 : 0, (i > 0 ? i + 1 : i) + MINIMUM_STUDENTS);
+        std::vector<Student> sliced = slice(students, 0, MINIMUM_STUDENTS);
         if (sliced.size() > 0)
             groups.push_back(sliced);
     }
@@ -190,7 +193,8 @@ int main()
         {15, "Ave", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
         {16, "Williama", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
         {17, "Isabell", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
-        {19, "Charlotte", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
+        {18, "Charlotte", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
+        {19, "Alexander", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"},
         {20, "James", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
         {21, "Amelia", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
         {22, "Benjamin", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"},
@@ -201,7 +205,7 @@ int main()
         {27, "Harper", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
         {28, "Henry", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
         {29, "Ella", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
-        {30, "Christopher", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"}
+
     };
 
     // while (true)
