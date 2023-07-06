@@ -33,12 +33,13 @@ std::string toLowerCase(std::string word)
 template <typename T>
 std::vector<T> slice(std::vector<T> vec, int begin, int end)
 {
+    int _end = end <= vec.size() ? vec.size() : end;
     std::vector<T> result = {};
 
-    if (begin > vec.size() || end > vec.size() || begin < 0)
+    if (begin > vec.size() || begin < 0)
         return result;
 
-    for (int i = begin; i <= end; i++)
+    for (int i = begin; i <= _end; i++)
     {
         result.push_back(vec[i]);
     }
@@ -100,14 +101,6 @@ std::vector<std::vector<Student>> generateTeams(std::vector<Student> students, i
         {
             bool currentStudentIsCompatible = compareStudents(currentGroup.back(), students[i]);
 
-            // for (Student groupedStudent : currentGroup)
-            // {
-            //     currentStudentIsCompatible = compareStudents(groupedStudent, students[i]);
-            //     if (!currentStudentIsCompatible){
-            //         break;
-            //     }
-            // }
-
             if (currentStudentIsCompatible)
             {
                 currentGroup.push_back(students[i]);  // Agregar al estudiante al grupo
@@ -138,15 +131,18 @@ std::vector<std::vector<Student>> generateTeams(std::vector<Student> students, i
 
     for (int i = 0; i < students.size(); i += MINIMUM_STUDENTS)
     {
-        if (students.size() < MINIMUM_STUDENTS)
-        {
-            groups.push_back(students);
-            break;
-        }
-        // groups.push_back(std::vector(students.begin() + i, students.begin() + i + 7));
-        auto sliced = slice<Student>(students, i > 0 ? i + 1 : 0, (i > 0 ? i + 1 : i) + MINIMUM_STUDENTS);
-        if (sliced.size() > 0)
-            groups.push_back(sliced);
+        int startIndex = i > 0 ? i + 1 : 0;
+        int endIndex = (i > 0 ? i + 1 : i) + MINIMUM_STUDENTS;
+        std::vector<Student> newGroup = slice<Student>(students, startIndex, endIndex);
+
+        // if (newGroup.size() < MINIMUM_STUDENTS)
+        // {
+        //     groups.push_back(students);
+        //     break;
+        // }
+
+        if (newGroup.size() > 0)
+            groups.push_back(newGroup);
     }
 
     return groups;
