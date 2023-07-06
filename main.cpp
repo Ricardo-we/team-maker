@@ -137,18 +137,8 @@ std::vector<std::vector<Student>> generateTeams(std::vector<Student> students, i
     for (int i = 0; i < pendingGroupsSize; i++)
     {
         println(std::to_string(lastGroupIndex));
-        // int startIndex = lastGroupIndex > 0 ? lastGroupIndex + 1 : 0;
-        // int startIndex =  lastGroupIndex;
-        // int endIndex = (lastGroupIndex > 0 ? lastGroupIndex + 1 : lastGroupIndex) + MINIMUM_STUDENTS;
         int startIndex = 0;
         int endIndex = students.size() < (MINIMUM_STUDENTS + 3)  ? students.size() : MINIMUM_STUDENTS;
-        // if(students.size() <= MINIMUM_STUDENTS) {
-        //     println("JIJI" + std::to_string(startIndex) + std::to_string(students.size()));
-        //     // groups.push_back(slice(students, startIndex, students.size()));
-        //     groups.push_back(students);
-        //     break;
-        // }
-        // int endIndex = i + MINIMUM_STUDENTS;
         std::vector<Student> newGroup = slice<Student>(students, startIndex, endIndex);
         students.erase(students.begin() + startIndex, students.begin() + endIndex);
         lastGroupIndex = endIndex;
@@ -214,6 +204,7 @@ int main()
         {30, "Christopher", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"}
     };
 
+    // TODO Decomment ⬇️
     // while (true)
     // {
     //     Student student = getStudent();
