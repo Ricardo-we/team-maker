@@ -190,6 +190,18 @@ int main()
         {15, "Ave", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
         {16, "Williama", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
         {17, "Isabell", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
+        {19, "Charlotte", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
+        {20, "James", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
+        {21, "Amelia", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
+        {22, "Benjamin", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"},
+        {23, "Evelyn", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
+        {24, "Daniel", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
+        {25, "Sofia", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
+        {26, "Joseph", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"},
+        {27, "Harper", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
+        {28, "Henry", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
+        {29, "Ella", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
+        {30, "Christopher", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"}
     };
 
     // while (true)
