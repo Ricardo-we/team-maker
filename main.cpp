@@ -136,6 +136,7 @@ std::vector<std::vector<Student>> generateTeams(std::vector<Student> students, i
     int lastGroupIndex = 0;
     for (int i = 0; i < pendingGroupsSize; i++)
     {
+ 
         println(std::to_string(lastGroupIndex));
         int startIndex = 0;
         int endIndex = students.size() < (MINIMUM_STUDENTS + 3)  ? students.size() : MINIMUM_STUDENTS;
@@ -147,13 +148,18 @@ std::vector<std::vector<Student>> generateTeams(std::vector<Student> students, i
             groups.push_back(newGroup);
         
     }
+    
+    if(students.size() < MINIMUM_STUDENTS && students.size() > 0){
+            groups.push_back(students);
+    }
 
     return groups;
 }
 
-Student getStudent()
+Student getStudent(int id)
 {
     Student student = {};
+    student.id = id;
     student.name = getStringInput("Introduce tu nombre: ");
     student.sport = getStringInput("¿Cuál es su deporte favorito? (futbol,basquet,voley,natacion,karate,otros): ");
     student.music = getStringInput("¿Qué música le gusta ? (salsa,rock,bachata,regaetton,merengue,technocumbia,folklorica,otros): ");
@@ -198,21 +204,23 @@ int main()
         {24, "Daniel", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
         {25, "Sofia", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
         {26, "Joseph", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"},
-        {27, "Harper", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
-        {28, "Henry", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
-        {29, "Ella", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
-        {30, "Christopher", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"}
+        // {27, "Harper", "natación", "Jazz", "Salsa", "No instrument", "Club D", "Cinema"},
+        // {28, "Henry", "futbol", "Rock", "Salsa", "Guitar", "Club X", "Video Games"},
+        // {29, "Ella", "basquetball", "Pop", "Bachata", "Piano", "Club Y", "Traveling"},
+        // {30, "Christopher", "tennis", "Hip Hop", "Merengue", "Drums", "Club Z", "Reading"}
     };
 
+   
     // TODO Decomment ⬇️
-    // while (true)
-    // {
-    //     Student student = getStudent();
-    //     studentsSample.push_back(student);
-    //     std::string wantToAddMoreStudents = getStringInput("Desea añadir otro estudiante? (sí o no)");
-    //     if (toLowerCase(wantToAddMoreStudents) == "no")
-    //         break;
-    // }
+    while (true)
+    {   
+        int id = studentsSample.size() + 1;
+        Student student = getStudent(id);
+        studentsSample.push_back(student);
+        std::string wantToAddMoreStudents = getStringInput("Desea añadir otro estudiante? (sí o no)");
+        if (toLowerCase(wantToAddMoreStudents) == "no")
+            break;
+    }
 
     // Generar equipos de trabajo
     // std::vector<std::vector<Student>> teams = generateTeams(studentsSample, std::vector<std::vector<Student>>{});
